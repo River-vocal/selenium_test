@@ -45,8 +45,8 @@ def iterate_one_iapd_page(bot: Bot, cur_link):
 
 
 def iterate_100_companies(bot: Bot):
-    for i in range(1):
-        print(f"Current index: {i + 1}")
+    for i in range(len(bot.company_name_list)):
+        print(f"\nCurrent index: {i + 1}")
         bot.update_company_list()
         cur_financial_advisor = bot.company_link_list[i]
         print(f"Current Financial Advisor: {cur_financial_advisor.get_attribute('innerHTML').strip()}")
