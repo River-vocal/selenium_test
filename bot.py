@@ -16,6 +16,7 @@ class Bot:
         self.average_client_balance_list = []
         self.assets_under_management_list = []
         self.company_website_list = []
+        self.address_list = []
         options = Options()
         options.add_experimental_option("detach", True)
 

@@ -11,7 +11,7 @@ def iterate_one_iapd_page(bot: Bot, cur_link):
     bot.update_original_window()
     cur_link.click()
     bot.driver.switch_to.window(bot.driver.window_handles[1])
-    bot.driver.implicitly_wait(5)
+    bot.driver.implicitly_wait(25)
     part2_tab_link = bot.driver.find_element(By.XPATH, "//li[@data-link-page='FIRM_PART_2_BROCHURES']")
     part2_tab_link.click()
     part_2_brochures_links = bot.driver.find_elements(By.XPATH, "//a[@class='link-nostyle cursor-pointer']")
@@ -39,7 +39,7 @@ def iterate_one_iapd_page(bot: Bot, cur_link):
 
 
 def iterate_100_companies(bot: Bot):
-    for i in range(len(bot.company_name_list)):
+    for i in range(5):
         print(f"\nCurrent index: {i + 1}")
         bot.update_company_list()
         cur_financial_advisor = bot.company_link_list[i]
@@ -57,6 +57,8 @@ def iterate_100_companies(bot: Bot):
         bot.assets_under_management_list.append(assets_under_management_element.get_attribute('innerHTML').strip())
         company_web_link = bot.driver.find_element(By.XPATH, "//tr[td[contains(., 'Website')]][1]/td[2]/a")
         bot.company_website_list.append(company_web_link.get_attribute('href').strip())
+        address_element = bot.driver.find_element(By.XPATH, "//tr[td[contains(., 'Main Office Address')]][1]/td[2]")
+        bot.address_list.append(address_element.get_attribute('innerHTML').strip())
         iterate_one_iapd_page(bot, tmp_link)
         bot.driver.back()
 
@@ -65,14 +67,14 @@ def write_to_file(bot: Bot):
     with open(output_file_name, "w", newline='', encoding='utf-8') as file:
         w = csv.writer(file, escapechar='\\')
         first_row: list = ["Index", "Financial Advisor Firm", "Phone Number", "Average Client Balance",
-                           "Assets Under Management", "Website", "IAPD Page"]
+                           "Assets Under Management", "Main Office Address", "Website", "IAPD Page"]
         for word in search_keywords:
             first_row.append(f"Search Results with keyword: {word}")
         w.writerow(first_row)
         for i in range(len(bot.company_name_list)):
             cur_row: list = [i + 1, bot.company_name_list[i].strip(), bot.phone_number_list[i],
                              bot.average_client_balance_list[i], bot.assets_under_management_list[i],
-                             bot.company_website_list[i], bot.iapd_url_list[i]]
+                             bot.address_list[i], bot.company_website_list[i], bot.iapd_url_list[i]]
             for j in range(len(search_keywords)):
                 cur_row.append("|||||".join(bot.search_results_list[i][j]))
             w.writerow(cur_row)
