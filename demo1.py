@@ -63,7 +63,7 @@ def iterate_100_companies(bot: Bot):
 
 def write_to_file(bot: Bot):
     with open(output_file_name, "w", newline='', encoding='utf-8') as file:
-        w = csv.writer(file)
+        w = csv.writer(file, escapechar='\\')
         first_row: list = ["Index", "Financial Advisor Firm", "Phone Number", "Average Client Balance",
                            "Assets Under Management", "Website", "IAPD Page"]
         for word in search_keywords:
