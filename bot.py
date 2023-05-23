@@ -12,6 +12,10 @@ class Bot:
         self.iapd_url_list = []
         self.company_name_list = []
         self.search_results_list = []
+        self.phone_number_list = []
+        self.average_client_balance_list = []
+        self.assets_under_management_list = []
+        self.company_website_list = []
         options = Options()
         options.add_experimental_option("detach", True)
 

@@ -1,16 +1,10 @@
 import csv
-import os
-import time
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
 from bot import Bot
+from constants import output_file_name, search_keywords, seed_url
 from utils import extract_text_content_from_url, search_with_context
-from constants import context_length, output_file_name, search_keywords
 
 
 def iterate_one_iapd_page(bot: Bot, cur_link):
@@ -53,28 +47,39 @@ def iterate_100_companies(bot: Bot):
         cur_financial_advisor.click()
         tmp_link = bot.driver.find_element(By.PARTIAL_LINK_TEXT, "View Filings")
         print(f"Current IAPD link: {tmp_link.get_attribute('href')}")
+        phone_number_link = bot.driver.find_element(By.XPATH, "//a[contains(@href, 'tel:')]")
+        bot.phone_number_list.append(phone_number_link.get_attribute('innerHTML'))
+        average_client_balance_element = bot.driver.find_element \
+            (By.XPATH, "//tr[td[contains(., 'Average Client Balance')]][1]/td[2]")
+        bot.average_client_balance_list.append(average_client_balance_element.get_attribute('innerHTML').strip())
+        assets_under_management_element = bot.driver.find_element \
+            (By.XPATH, "//tr[td[contains(., 'Assets Under Management')]][1]/td[2]")
+        bot.assets_under_management_list.append(assets_under_management_element.get_attribute('innerHTML').strip())
+        company_web_link = bot.driver.find_element(By.XPATH, "//tr[td[contains(., 'Website')]][1]/td[2]/a")
+        bot.company_website_list.append(company_web_link.get_attribute('href').strip())
         iterate_one_iapd_page(bot, tmp_link)
         bot.driver.back()
 
 
 def write_to_file(bot: Bot):
-    with open(output_file_name, "w", newline='') as file:
+    with open(output_file_name, "w", newline='', encoding='utf-8') as file:
         w = csv.writer(file)
-        first_row: list = ["Index", "Financial Advisor Firm", "IAPD page"]
+        first_row: list = ["Index", "Financial Advisor Firm", "Phone Number", "Average Client Balance",
+                           "Assets Under Management", "Website", "IAPD Page"]
         for word in search_keywords:
             first_row.append(f"Search Results with keyword: {word}")
         w.writerow(first_row)
         for i in range(len(bot.company_name_list)):
-            cur_row: list = [i + 1, bot.company_name_list[i].strip(), bot.iapd_url_list[i]]
+            cur_row: list = [i + 1, bot.company_name_list[i].strip(), bot.phone_number_list[i],
+                             bot.average_client_balance_list[i], bot.assets_under_management_list[i],
+                             bot.company_website_list[i], bot.iapd_url_list[i]]
             for j in range(len(search_keywords)):
                 cur_row.append("|||||".join(bot.search_results_list[i][j]))
             w.writerow(cur_row)
 
 
 def run():
-    bot = Bot("https://investor.com/financial-advisor-firms/florida", wait_time=15, teardown=False)
+    bot = Bot(seed_url=seed_url, wait_time=15, teardown=False)
     bot.land_first_page()
     iterate_100_companies(bot)
     write_to_file(bot)
-
-run()
