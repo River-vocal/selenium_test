@@ -22,7 +22,8 @@ Run the code (if you have closed the Command Prompt Window):
 3. In the Command Prompt window, type 'cd <the path you just copied>', and press enter (don't include the quote in your typing! Same with all the following typing)
 4. Type 'myenv\Scripts\activate', and press enter 
 (after this step, you should see "(myenv)" before your prompt)
-5. Type 'python main.py', and press enter. 
+5. Run IEDriverServer.exe (double click it)
+6. Type 'python main.py', and press enter. 
 You will see the output print in the window
 
 * You can right-click the constants.py to open it with notepad (or any other text editor).
