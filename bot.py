@@ -1,11 +1,13 @@
-import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
+from company import CompanyInfo
+from constants import seed_url as init_seed_url
+
 
 class Bot:
-    def __init__(self, seed_url: str, wait_time: int = 15,
+    def __init__(self, seed_url: str = init_seed_url, wait_time: int = 15,
                  teardown: bool = False):
         self.original_window = None
         self.company_link_list = None
@@ -17,6 +19,7 @@ class Bot:
         self.assets_under_management_list = []
         self.company_website_list = []
         self.address_list = []
+        self.company_info_list: list[CompanyInfo] = []
         options = Options()
         options.add_experimental_option("detach", True)
 

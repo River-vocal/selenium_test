@@ -1,5 +1,5 @@
 # selenium_test
-This project aims to automate the info extraction of a financial advisor list.
+This project aims to automate the info extraction of a financial advisor Excel file.
 
 User guide for this mini-project:
 
@@ -23,7 +23,8 @@ Run the code (if you have closed the Command Prompt Window):
 4. Type 'myenv\Scripts\activate', and press enter 
 (after this step, you should see "(myenv)" before your prompt)
 5. Run IEDriverServer.exe (double click it)
-6. Type 'python main.py', and press enter. 
+6. Modify the variables in constants.py file
+7. Type 'python main.py', and press enter. 
 You will see the output print in the window
 
 * You can right-click the constants.py to open it with notepad (or any other text editor).
